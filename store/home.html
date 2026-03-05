@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Products</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="mb-4">Products</h1>
+    <div class="row" id="product-list">
+      <!-- Products will appear here -->
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8080/store/products/";
+
+    // Fetch products from API
+    fetch(API_URL)
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("product-list");
+        // Assuming DRF pagination: loop through data.results
+        const products = data.results || data; // in case results doesn't exist
+        products.forEach(item => {
+          const card = `
+            <div class="col-lg-3 col-md-6 mb-4">
+              <div class="card h-100">
+                <img src="${item.image || '/static/default.png'}" class="card-img-top" alt="${item.title}">
+                <div class="card-body text-center">
+                  <h5>${item.title}</h5>
+                  <p>${item.description || "No description"}</p>
+                  <h4>$${item.price}</h4>
+                </div>
+              </div>
+            </div>
+          `;
+          container.innerHTML += card;
+        });
+      })
+      .catch(err => console.error("Error fetching products:", err));
+  </script>
+</body>
+</html>
